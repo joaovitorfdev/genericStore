@@ -7,29 +7,29 @@ export default function Home() {
       <div>
         <NavBar></NavBar>
        
-        <div className="flex min-h-screen space-y-36 permanent-marker">
-      {/* Menu lateral */}
-            <aside key="sideBar" className="bg-white w-64 p-6 rounded-r-3xl fixed h-96 font-bold ">
-                <nav className="space-y-4 px-10 py-10">
-                <Link href="/tshirts">
-                    <button className="w-full text-left text-black py-5  rounded-lg">
-                    T-SHIRTS
-                    </button>
-                </Link>
-                <Link href="/pants">
-                    <button className="w-full text-left text-blackpx-4 py-5  rounded-lg">
-                    CALÇAS
-                    </button>
-                </Link>
-                <Link href="/shoes">
-                    <button className="w-full text-left text-blackpy-2 py-5 rounded-lg">
-                    SAPATOS
-                    </button>
-                </Link>
-                </nav>
-            </aside>
+        <div className="flex min-h-screen space-y-36 small-text tinos">
+        <aside key="sideBar" className="bg-white w-64 p-6 text-gray-200 rounded-r-3xl fixed h-96 font-bold">
+            <nav className="px-10 py-5">
+                <div className="flex flex-col space-y-6" > {/* Espaçamento entre os links */}
+                    <Link href="/tshirts">
+                        <button className="w-full text-left rounded-lg transition-colors duration-300 hover:text-black">NEW</button>
+                    </Link>
+                    <Link href="/pants">
+                        <button className="w-full text-left rounded-lg">T-SHIRTS</button>
+                    </Link>
+                    <Link href="/shoes">
+                        <button className="w-full text-left rounded-lg">HOODIES</button>
+                    </Link>
+                    <Link href="/shorts">
+                        <button className="w-full text-left rounded-lg">SHORTS</button>
+                    </Link>
+                    <Link href="/acessories">
+                        <button className="w-full text-left rounded-lg">ACESSORIES</button>
+                    </Link>
+                </div>
+            </nav>
+        </aside>
 
-            {/* Conteúdo principal */}
             <div className="flex-1 ml-64">
                
                 <main className="p-8">
