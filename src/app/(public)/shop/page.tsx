@@ -1,7 +1,6 @@
-import Image from "next/image";
 import NavBar from "@/app/components/NavBar/NavBar";
+import ProductCard from "@/app/components/ProductCard/ProductCard";
 import Link from "next/link";
-
 export default function Home() {
   return (
       <div>
@@ -33,8 +32,7 @@ export default function Home() {
             <div className="flex-1 ml-64">
                
                 <main className="p-8">
-                <h1 className="text-3xl font-bold">Bem-vindo à loja!</h1>
-                <p>Escolha uma categoria no menu lateral.</p>
+                   {/* <ProductCard></ProductCard> */}
                 </main>
             </div>
             </div>
