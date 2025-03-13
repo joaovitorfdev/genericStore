@@ -7,7 +7,7 @@ export default function Home() {
       <div>
         <NavBar></NavBar>
        
-        <div className="flex min-h-screen space-y-36 small-text tinos">
+        <div className="flex min-h-screen space-y-36 small-text permanent-marker">
         <aside key="sideBar" className="bg-white w-64 p-6 text-gray-200 rounded-r-3xl fixed h-96 font-bold">
             <nav className="px-10 py-5">
                 <div className="flex flex-col space-y-6" > {/* Espaçamento entre os links */}
