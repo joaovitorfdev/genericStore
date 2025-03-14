@@ -25,9 +25,10 @@ export default function Home() {
         <main className="p-6 md:ml-64 flex-1">
           <div className="grid grid-cols-2 py-7 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
             <ProductCard 
-              name="JORDAN 23"
-              price="299,90"
-              imgSrc="https://blacknine.cdn.magazord.com.br/img/2025/01/produto/8300/costas-2025-01-15t123944-125.png?ims=2000x1855"/>
+                id={1}
+                name="JORDAN 23"
+                price="299,90"
+                imgSrc="https://blacknine.cdn.magazord.com.br/img/2025/01/produto/8300/costas-2025-01-15t123944-125.png?ims=2000x1855"/>
             <ProductCard 
               name="BLACK NINE SHAQUILE O'NEAL"
               price="299,90"
