@@ -32,7 +32,6 @@ export default function Home() {
 
   return (
     <div>
-      <NavBar />
       <div className="flex py-12 flex-col md:flex-row">
         <main className="p-6 md:ml-64 flex-1">
           <div className="w-full max-w-5xl mx-auto flex flex-col md:flex-row gap-8">
