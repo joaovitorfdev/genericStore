@@ -6,6 +6,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "madenlatados.com.br",
       },
+      {
+        protocol: "https",
+        hostname: "blacknine.cdn.magazord.com.br", // Adicionando o novo domínio
+      },
     ],
   },
 };
