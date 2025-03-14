@@ -23,7 +23,7 @@ export default function ProductCard({ name, price, imgSrc }: ProductCardProps) {
 
       {/* Informações do Produto */}
       <div className="text-center mt-4">
-        <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
+        <h3 className="text-lg  text-gray-500 transition-colors duration-700 hover:text-black ">{name}</h3>
         <p className="text-xl font-bold text-black mt-2">{price}</p>
       </div>
     </li>
