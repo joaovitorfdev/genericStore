@@ -1,8 +1,34 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NavBar from "@/app/components/NavBar/NavBar";
+import { ProductDTO } from "../../types/ProductDTO";
+import { GetProductByID } from "../../services/products_service";
+import { useParams } from "next/navigation";
+import SizeSelector from "./components/SizeSelection";
 
 export default function Home() {
+
+  const [product, setProduct] = useState<ProductDTO>();
+  const { id } = useParams();
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      if (!id) return;
+      try {
+        const data = await GetProductByID(id.toString());
+        setProduct(data);
+      } catch (err) {
+        setError("Falha ao carregar produtos");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [id]);
+
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
   const [mainImage, setMainImage] = useState(
     "https://blacknine.cdn.magazord.com.br/img/2025/01/produto/8300/costas-2025-01-15t123944-125.png?ims=2000x1855"
@@ -29,6 +55,9 @@ export default function Home() {
     const newImageSrc = e.currentTarget.src; // Obtém a URL da miniatura clicada
     setMainImage(newImageSrc); // Atualiza a imagem principal
   };
+
+  if(!product){return}
+  
   return (
     <div>
       <div className="flex py-12 flex-col md:flex-row">
@@ -71,29 +100,19 @@ export default function Home() {
 
             {/* Seção de informações (direita) */}
             <div className="flex-1 flex flex-col gap-4">
-              <h1 className="text-3xl font-bold uppercase">Jordan 23</h1>
+              <h1 className="text-3xl font-bold uppercase">{product.name}</h1>
 
-              {/* Seleção de tamanho */}
-              <div>
-                <label className="block text-gray-600 mb-2">Selecione o tamanho:</label>
-                <div className="flex gap-2 flex-wrap">
-                  {["XS", "S", "M", "L", "XL", "2XL", "3XL"].map((size) => (
-                    <button
-                      key={size}
-                      className="border border-gray-200 px-2 py-1 text-sm hover:bg-gray-100 w-12 text-center"
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <SizeSelector stocks={product.stocks} />
 
               <hr className="border-t border-gray-300 my-4" />
 
               {/* Preço */}
               <div>
                 <p className="text-gray-600 line-through">3x de R$</p>
-                <p className="text-2xl font-bold">R$ 199,00</p>
+                <p className="text-2xl font-bold">{new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  }).format(Number(product.price))}</p>
               </div>
 
               {/* Botões */}

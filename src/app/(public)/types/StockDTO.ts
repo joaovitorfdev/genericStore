@@ -9,8 +9,8 @@ export enum Size {
   }
 
 export interface StockDTO {
-    id: string; // UUID como string em JSON
-    product_id: string; // UUID do produto
-    size: Size; // Usando o enum Size
+    id: string;
+    product_id: string; 
+    size: Size; 
     quantity: number;
   }
