@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import NavBar from "@/app/components/NavBar/NavBar";
 import { ProductDTO } from "../../types/ProductDTO";
 import { GetProductByID } from "../../services/products_service";
 import { useParams } from "next/navigation";
 import SizeSelector from "./components/SizeSelection";
+import { GetMediaLink } from "../../services/helper";
 
 export default function Home() {
 
@@ -13,27 +13,30 @@ export default function Home() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
+  const [mainImage, setMainImage] = useState<string | undefined>(undefined);
+  const [isZoomed, setIsZoomed] = useState(false); // Estado para controlar o zoom
   useEffect(() => {
     const fetchProducts = async () => {
       if (!id) return;
       try {
         const data = await GetProductByID(id.toString());
         setProduct(data);
+  
+        if (data?.images && data.images[0]?.image) {
+          setMainImage(GetMediaLink(data.images[0].image));
+        }
       } catch (err) {
-        setError("Falha ao carregar produtos");
+        setError("Falha ao carregar produto");
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchProducts();
   }, [id]);
-
-  const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
-  const [mainImage, setMainImage] = useState(
-    "https://blacknine.cdn.magazord.com.br/img/2025/01/produto/8300/costas-2025-01-15t123944-125.png?ims=2000x1855"
-  );
-  const [isZoomed, setIsZoomed] = useState(false); // Estado para controlar o zoom
+  
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
@@ -56,7 +59,9 @@ export default function Home() {
     setMainImage(newImageSrc); // Atualiza a imagem principal
   };
 
-  if(!product){return}
+  if (!product || !product.images || !product.images[0].image) {
+    return null; // ou outro componente de fallback
+  }
   
   return (
     <div>
@@ -81,24 +86,20 @@ export default function Home() {
                   }}
                 />
               </div>
-              <div className="flex gap-2 mt-4 justify-center w-full">
-                {[
-                  "https://cdn.awsli.com.br/2500x2500/1605/1605630/produto/310106765/tee4sufblurbrown1-0tjpqxueeo.jpg",
-                  "https://blacknine.cdn.magazord.com.br/img/2025/01/produto/8300/costas-2025-01-15t123944-125.png?ims=2000x1855",
-                  "https://blacknine.cdn.magazord.com.br/img/2025/01/produto/8300/costas-2025-01-15t123944-125.png?ims=2000x1855",
-                ].map((src, index) => (
-                  <img
-                    key={index}
-                    src={src}
-                    alt={`Thumbnail ${index + 1}`}
-                    className="w-16 h-16 object-cover border cursor-pointer"
-                    onClick={handleMiniatureClick} // Adiciona o evento de clique
-                  />
-                ))}
-              </div>
+                <div className="flex gap-2 mt-4 justify-center w-full">
+                  {
+                    product.images?.map((product, index) => (
+                    <img
+                      key={index}
+                      src={product.image ? GetMediaLink(product.image) : ''}
+                      alt={`Thumbnail ${index + 1}`}
+                      className="w-16 h-16 object-cover border cursor-pointer"
+                      onClick={handleMiniatureClick} // Adiciona o evento de clique
+                    />
+                  ))}
+                </div>
             </div>
 
-            {/* Seção de informações (direita) */}
             <div className="flex-1 flex flex-col gap-4">
               <h1 className="text-3xl font-bold uppercase">{product.name}</h1>
 
@@ -106,7 +107,6 @@ export default function Home() {
 
               <hr className="border-t border-gray-300 my-4" />
 
-              {/* Preço */}
               <div>
                 <p className="text-gray-600 line-through">3x de R$</p>
                 <p className="text-2xl font-bold">{new Intl.NumberFormat("en-US", {
@@ -115,7 +115,6 @@ export default function Home() {
                   }).format(Number(product.price))}</p>
               </div>
 
-              {/* Botões */}
               <div className="flex gap-6">
                 <button className="bg-gray-800 text-white px-6 py-3 max-w-[200px] flex items-center gap-4 hover:bg-gray-700 transition">
                   Add to cart

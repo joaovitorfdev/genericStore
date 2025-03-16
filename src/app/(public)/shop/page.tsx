@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ProductDTO } from "../types/ProductDTO";
 import {GetProducts} from "../services/products_service"
+import { GetMediaLink } from "../services/helper";
 
 
 export default function Home() {
@@ -30,7 +31,6 @@ export default function Home() {
   }, []);
 
  
-  const BASE_URL = "http://localhost:8000"; 
 
   return (
     <div>
@@ -42,7 +42,7 @@ export default function Home() {
               products.map((product) => {
               
                 let mainImage = product.images && product.images.length > 0 ? product.images.find((img) => img.is_main)?.image ||  product.images[0].image : null;
-                let  imgSrc = mainImage ? `${BASE_URL}${mainImage}` : "https://via.placeholder.com/200";
+                let  imgSrc = mainImage ? `${GetMediaLink(mainImage)}` : "https://via.placeholder.com/200";
 
               return (
                 <ProductCard
