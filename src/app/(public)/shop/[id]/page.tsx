@@ -29,7 +29,6 @@ export default function Home() {
     const newImageSrc = e.currentTarget.src; // Obtém a URL da miniatura clicada
     setMainImage(newImageSrc); // Atualiza a imagem principal
   };
-
   return (
     <div>
       <div className="flex py-12 flex-col md:flex-row">

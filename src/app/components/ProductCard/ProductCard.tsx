@@ -3,22 +3,22 @@ import Link from "next/link";
 
 interface ProductCardProps {
   name: string;
-  id?: number
+  id?: string
   // description: string;
   price: string;
-  imgSrc: string;
+  imgSrc: string ;
 }
 
 export default function ProductCard({ name, price, imgSrc, id }: ProductCardProps) {
   return (
-    <li className="bg-white rounded-lg p-4 flex flex-col items-center justify-between w-full h-auto">
-      <Link href={`/shop/${id}`} className="w-full h-80 bg-gray-200 rounded-lg overflow-hidden block">
+    <li className="bg-transparent rounded-lg p-4 flex flex-col  items-center justify-between w-full h-auto">
+      <Link href={`/shop/${id}`} className="w-full h-80 rounded-lg overflow-hidden block">
         <Image
           src={imgSrc}
           alt={name}
           width={350}
           height={400} 
-          className="object-cover w-full h-full" 
+          className="object-cover  w-full h-full" 
         />
       </Link>
 

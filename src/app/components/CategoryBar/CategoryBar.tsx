@@ -2,11 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-function CreateButtons()
-{
 
-    "use client"
-}
 export default function CategoryBar() {
   const [activeCategory, setActiveCategory] = useState("NEW");
 

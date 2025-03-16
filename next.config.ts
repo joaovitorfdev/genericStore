@@ -11,6 +11,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "blacknine.cdn.magazord.com.br",
       },
+      {
+        protocol: "http", // Corrigido para apenas "http"
+        hostname: "localhost", // Apenas o hostname
+        port: "8000", // Opcional, mas útil para especificar a porta
+      },
     ],
   },
 };
