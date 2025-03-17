@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { ProductDTO } from "../../types/ProductDTO";
 import { GetProductByID } from "../../services/products_service";
 import { useParams } from "next/navigation";
-import SizeSelector from "./components/SizeSelection";
+import SizeSelector from "../../../components/SizeSelection";
 import { GetMediaLink } from "../../services/helper";
 
-export default function Home() {
+export default function ProductPage() {
 
   const [product, setProduct] = useState<ProductDTO>();
   const { id } = useParams();
