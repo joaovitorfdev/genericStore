@@ -86,15 +86,15 @@ export default function ProductPage() {
                   }}
                 />
               </div>
-                <div className="flex gap-2 mt-4 justify-center w-full">
+                <div className="flex gap-2 mt-4 gap-x-5 justify-center w-full">
                   {
                     product.images?.map((product, index) => (
                     <img
                       key={index}
                       src={product.image ? GetMediaLink(product.image) : ''}
                       alt={`Thumbnail ${index + 1}`}
-                      className="w-16 h-16 object-cover border cursor-pointer"
-                      onClick={handleMiniatureClick} // Adiciona o evento de clique
+                      className="w-16 h-16 object-cover cursor-pointer"
+                      onClick={handleMiniatureClick}
                     />
                   ))}
                 </div>
@@ -102,11 +102,8 @@ export default function ProductPage() {
 
             <div className="flex-1 flex flex-col gap-4">
               <h1 className="text-3xl font-bold uppercase">{product.name}</h1>
-
               <SizeSelector stocks={product.stocks} />
-
               <hr className="border-t border-gray-300 my-4" />
-
               <div>
                 <p className="text-gray-600 line-through">3x de R$</p>
                 <p className="text-2xl font-bold">{new Intl.NumberFormat("en-US", {

@@ -9,8 +9,6 @@ import { GetMediaLink } from "../services/helper";
 
 export default function ShopPage() {
   const [products, setProducts] = useState<ProductDTO[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState("ALL");
 
   useEffect(() => {
@@ -19,10 +17,8 @@ export default function ShopPage() {
         const data = await GetProducts();
         setProducts(data);
       } catch (err) {
-        setError("Falha ao carregar produtos");
-      } finally {
-        setLoading(false);
-      }
+        alert("Falha ao carregar produtos");
+      } 
     };
 
     fetchProducts();
@@ -34,6 +30,7 @@ export default function ShopPage() {
   return (
     <div>
       <CategoryBar activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
+      
       <div className="flex min-h-screen flex-col md:flex-row">
         <main className="p-6 md:ml-64 flex-1">
           <div className="grid grid-cols-2 py-7 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
