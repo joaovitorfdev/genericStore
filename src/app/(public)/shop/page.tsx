@@ -11,20 +11,26 @@ export default function ShopPage() {
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [activeCategory, setActiveCategory] = useState("ALL");
 
+ 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const data = await GetProducts();
         setProducts(data);
       } catch (err) {
-        alert("Falha ao carregar produtos");
+        return(
+          <div>
+               <h1>Falha ao retornar produtos</h1>
+          </div>
+          
+        )
+   
       } 
     };
 
     fetchProducts();
   }, []);
 
-  // Função para filtrar produtos com base na categoria ativa
   const filteredProducts = activeCategory === "ALL" ? products : products.filter(product => product.category === activeCategory.toLowerCase()); // Ajuste conforme sua estrutura de dados
 
   return (
@@ -43,15 +49,16 @@ export default function ShopPage() {
 
               return (
                 <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  price={new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  }).format(Number(product.price))}
-                  imgSrc={imgSrc}
-                />
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                price={new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(Number(product.price))}
+                imgSrc={imgSrc}
+                imgHoverSrc={product.images?.[1]?.image ? GetMediaLink(product.images[1].image) : ""}
+              />
               );
             })}
           </div>
