@@ -24,7 +24,7 @@ export default function NavBar() {
     className="h-10 w-10 mr-4" 
   />
 
-  <div className="flex-1 flex justify-center space-x-20 font-semibold">
+  <div className="flex-1 flex justify-center text-sm space-x-5 md:text-lg md:space-x-20 font-semibold">
     {navLinks.map((link) => {
       const isActive = pathname === link.href;
       return (
@@ -43,7 +43,7 @@ export default function NavBar() {
     <Link
       key="Login"
       href="/login"
-      className="transition-all duration-200 ease-in-out hover:text-gray-300 hover:scale-105  font-semibold"
+      className=" flex-1 flex justify-center text-sm space-x-5 md:text-lg md:space-x-20  transition-all duration-200 ease-in-out hover:text-gray-300 hover:scale-105  font-semibold"
     >
       LOGIN
     </Link>
