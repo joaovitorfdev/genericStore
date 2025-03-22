@@ -1,4 +1,4 @@
-import { ProductDTO } from "../types/ProductDTO";
+import { ProductDTO } from "../../types/ProductDTO";
 
 // Define a URL base usando a variável de ambiente
 const BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/products`;

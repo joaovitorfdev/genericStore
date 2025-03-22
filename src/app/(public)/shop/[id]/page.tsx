@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { ProductDTO } from "../../types/ProductDTO";
+import { ProductDTO } from "../../../types/ProductDTO";
 import { GetProductByID } from "../../services/products_service";
 import { useParams } from "next/navigation";
 import SizeSelector from "../../../components/SizeSelection";
@@ -34,7 +34,8 @@ export default function ProductPage() {
   }, [id]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const { left, top, width, height } =
+      e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - left) / width) * 100;
     const y = ((e.clientY - top) / height) * 100;
     setZoomPosition({ x, y });
@@ -51,7 +52,8 @@ export default function ProductPage() {
   };
 
   if (loading) return <div className="text-center py-20">Carregando...</div>;
-  if (error) return <div className="text-center py-20 text-red-500">{error}</div>;
+  if (error)
+    return <div className="text-center py-20 text-red-500">{error}</div>;
   if (!product || !product.images || !product.images[0].image) {
     return <div className="text-center py-20">Produto não encontrado</div>;
   }
@@ -59,8 +61,6 @@ export default function ProductPage() {
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-12 md:py-16">
         <main className="flex flex-col md:flex-row gap-8 max-w-5xl mx-auto">
-     
-     
           <div className="w-full md:w-1/2 flex flex-col items-center">
             <div
               className="relative w-full h-96 md:h-[500px] bg-white rounded-lg shadow-sm overflow-hidden"
@@ -80,8 +80,7 @@ export default function ProductPage() {
               />
             </div>
             <div className="flex gap-3 mt-4 flex-wrap justify-center">
-              {
-                product.images?.map((img, index) => (
+              {product.images?.map((img, index) => (
                 <img
                   key={index}
                   src={GetMediaLink(img.image ?? "")}
@@ -95,15 +94,24 @@ export default function ProductPage() {
 
           {/* Seção de Detalhes */}
           <div className="w-full md:w-1/2 flex flex-col gap-6">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-800 uppercase">{product.name}</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-800 uppercase">
+              {product.name}
+            </h1>
             <SizeSelector stocks={product.stocks} />
             <hr className="border-t border-gray-300" />
             <div className="flex flex-col gap-2">
               <p className="text-gray-500 line-through text-lg">
-                3x de {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(Number(product.price) / 3)}
+                3x de{" "}
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(Number(product.price) / 3)}
               </p>
               <p className="text-3xl font-bold text-gray-900">
-                {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(Number(product.price))}
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(Number(product.price))}
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
