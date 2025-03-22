@@ -55,7 +55,6 @@ export default function ProductPage() {
   if (!product || !product.images || !product.images[0].image) {
     return <div className="text-center py-20">Produto não encontrado</div>;
   }
-
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-12 md:py-16">
@@ -85,7 +84,7 @@ export default function ProductPage() {
                 product.images?.map((img, index) => (
                 <img
                   key={index}
-                  src={GetMediaLink(img.image)}
+                  src={GetMediaLink(img.image ?? "")}
                   alt={`Thumbnail ${index + 1}`}
                   className="w-16 h-16 md:w-20 md:h-20 object-cover rounded-md border border-gray-200 hover:border-gray-400 cursor-pointer transition-all duration-200"
                   onClick={handleMiniatureClick}
