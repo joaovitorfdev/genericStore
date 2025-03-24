@@ -1,6 +1,8 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import Link from 'next/link';
+
 import { useState } from "react";
 
 const login = async (username: string, password: string) => {
@@ -69,13 +71,24 @@ export default function LoginPage() {
           />
         </form>
        {
-        loginfailed && (
+        loginfailed  ? (
             
                 <h1 className="text-red-700  justify-self-center">
                 Login failed: Invalid credentials
                 </h1>
             )
+            :(
+              <div className="text-center text-sm">
+              <p className="text-gray-600">
+                Não tem uma conta?{" "}
+                <Link href="/register" className="font-medium  hover:text-gray-300 cursor-pointer transition-colors duration-200">
+                  Registre-se
+                </Link>
+              </p>
+            </div>
+            )
        }
+
       </section>
     </div>
   );
