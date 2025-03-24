@@ -4,7 +4,7 @@ import CategoryBar from "@/app/components/CategoryBar";
 import ProductCard from "@/app/components/ProductCard";
 import { useEffect, useState } from "react";
 import { ProductDTO } from "../../types/ProductDTO";
-import { GetProducts } from "../services/products_service";
+import { GetProducts } from "../services/productsService";
 import { GetMediaLink } from "../services/helper";
 
 export default function ShopPage() {

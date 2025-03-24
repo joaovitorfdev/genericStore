@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { ProductDTO } from "../../../types/ProductDTO";
-import { GetProductByID } from "../../services/products_service";
+import { GetProductByID } from "../../services/productsService";
 import { useParams } from "next/navigation";
 import SizeSelector from "../../../components/SizeSelection";
 import { GetMediaLink } from "../../services/helper";
