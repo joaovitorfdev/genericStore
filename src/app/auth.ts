@@ -20,10 +20,8 @@ export async function login(username: string, password: string): Promise<boolean
       console.error("Falha na autenticação");
       return false;
     }
-
-    // Armazena o token no localStorage
+    
     localStorage.setItem("access_token", data.access);
-    localStorage.setItem("refresh_token", data.refresh); // Se necessário para renovação
 
     return true;
   } catch (error) {
@@ -50,11 +48,10 @@ export function getSession() {
 export function Islogged(){
     const session = getSession();
     if (!session) {
-      router.push("/login"); // Redireciona para o login se não estiver autenticado
+      router.push("/login");
     }
 }
 
 export function logout() {
   localStorage.removeItem("access_token");
-  localStorage.removeItem("refresh_token");
 }

@@ -1,30 +1,9 @@
 "use client";
 
+import { login } from "@/app/auth";
 import { signIn } from "next-auth/react";
 import Link from 'next/link';
 import { useState } from "react";
-
-const login = async (username: string, password: string) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/token/pair`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    }
-  );
-
-  if (!response.ok) {
-    return false;
-  }
-
-  const data = await response.json();
-  localStorage.setItem("token", data.access);
-  return true;
-};
-
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
