@@ -17,7 +17,7 @@ export default function LoginPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (loginFailed) {
-      setLoginFailed(false); 
+      setLoginFailed(false);
     }
     if (e.target.name === "username") {
       setUsername(e.target.value);
@@ -41,9 +41,8 @@ export default function LoginPage() {
               onChange={handleInputChange}
               name="username"
               value={username}
-              className={`w-80 px-4 py-2 border rounded-md focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-colors duration-200 placeholder-gray-400 ${
-                loginFailed ? "border-red-500" : "border-gray-200"
-              }`}
+              className={`w-80 px-4 py-2 border rounded-md focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-colors duration-200 placeholder-gray-400 ${loginFailed ? "border-red-500" : "border-gray-200"
+                }`}
               type="text"
               placeholder="Email"
             />
@@ -53,9 +52,8 @@ export default function LoginPage() {
               onChange={handleInputChange}
               name="password"
               value={password}
-              className={`w-80 px-4 py-2 border rounded-md focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-colors duration-200 placeholder-gray-400 ${
-                loginFailed ? "border-red-500" : "border-gray-200"
-              }`}
+              className={`w-80 px-4 py-2 border rounded-md focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-colors duration-200 placeholder-gray-400 ${loginFailed ? "border-red-500" : "border-gray-200"
+                }`}
               type="password"
               placeholder="Password"
             />

@@ -4,12 +4,14 @@ import Link from "next/link";
 import MiniLogin from "./MiniLogin";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import LoggedUserDropDown from "./LoggedUserDropDown";
 
 export default function NavBar() {
   const pathname = usePathname();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => setDropdownOpen((prev) => !prev);
-
+  const {user} = useAuth();
   const navLinks = [
     { href: "/", label: "HOME" },
     { href: "/shop", label: "SHOP" },
@@ -58,10 +60,17 @@ export default function NavBar() {
           onClick={toggleDropdown}
         >
           <UserCircleIcon className="h-8 w-8 md:h-10 md:w-10" />
-          <span>Entrar</span>
+          <span>{user?  user.first_name : "Entrar"}</span>
         </div>
 
-        { dropdownOpen && (<MiniLogin></MiniLogin>)  }
+                {dropdownOpen && (
+          user ? (
+            <LoggedUserDropDown />
+          ) : (
+            <MiniLogin />
+          )
+        )}
+
 
         <ShoppingCartIcon className="h-8 w-8 ml-10 md:h-10 md:w-10" />
       </div>

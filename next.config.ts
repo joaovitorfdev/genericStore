@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    // Desabilita o Turbopack e usa o Webpack
+    turbo: false,
+  },
   reactStrictMode: true,
   images: {
     remotePatterns: [
@@ -21,3 +25,4 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
+

@@ -1,19 +1,24 @@
-import { useState } from "react";
-import { login } from "../auth";
+import { SyntheticEvent, useState } from "react";
 import Link from "next/link";
-
+import { useAuth } from "@/context/AuthContext";
 export default function MiniLogin(){
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loginFailed, setLoginFailed] = useState(false);
-    
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const success = await login(username, password);
-        setLoginFailed(!success);
-      };
-    
+    const [error, setError] = useState('');
+
+    const { login } = useAuth();
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      const success = await login(username, password);
+      if (!success) {
+        setError('Credenciais inválidas. Tente novamente.');
+      } else {
+        // Redirecione ou faça outra ação após o login
+       // window.location.href = '/';
+      }
+    };
       const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (loginFailed) {
           setLoginFailed(false); 
