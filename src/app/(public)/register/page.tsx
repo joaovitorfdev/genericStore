@@ -3,8 +3,9 @@
 import { useState } from "react";
 import Link from 'next/link';
 import { useFormik } from "formik";
-import { CreateCustomer } from "../services/customerService";
+import { CreateUser } from "../services/userService";
 import { CustomerValidatorSchema } from "@/app/types/customer/validators/customer.validator";
+import { UserDTO } from "@/app/types/customer/validators/CustomerDTO";
 
 interface RegisterValues{
   name:string;
@@ -26,13 +27,27 @@ export default function RegisterPage() {
   const formik = useFormik({
     initialValues,
     validationSchema: CustomerValidatorSchema,
-    
-    onSubmit: (values, {setErrors}) => {
-      console.log(values)
-
-    }
-    
-  })
+    onSubmit: async (values, { setErrors }) => {
+      try {
+        const response = await CreateUser({
+            first_name: values.name,
+            last_name: values.surname,
+            email: values.email,
+            username: values.email,
+            password: values.password,
+            document: values.document
+   
+        } as UserDTO);
+  
+        console.log("Response:", response); // Aqui você printa a response no console
+  
+      } catch (error) {
+        console.error("Erro ao criar usuário:", error);
+        // Aqui você pode usar setErrors para mostrar as mensagens de erro, se necessário.
+      }
+    },
+  });
+  
 
 
 
