@@ -1,13 +1,16 @@
 "use client";
 
-import { login } from "@/app/auth";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { signIn } from "next-auth/react";
 import Link from 'next/link';
-import { useState } from "react";
+import { useContext, useState } from "react";
+
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginFailed, setLoginFailed] = useState(false);
+  
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

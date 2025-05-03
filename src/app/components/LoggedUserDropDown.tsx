@@ -1,22 +1,34 @@
-import { SyntheticEvent, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-export default function LoggedUserDropDown(){
+import { useRouter } from 'next/navigation'
 
+export default function LoggedUserDropDown() {
+  const { user, logout } = useAuth();
+  const router = useRouter(); // Instancia o router
 
-    const {user, logout} = useAuth();
-   
-    return(
-        
-        <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-gray-200 rounded-2xl shadow-lg z-10 p-4">
-          
-          <button
-              onClick={() => {logout()}}
-                type="submit"
-                className="w-full bg-gray-800 text-white px-3 py-2 rounded-md"
-              >
-                Sair
-              </button>
-        </div>
-    )
+  const handleAccountClick = () => {
+    // Redireciona o usuário para a página "customer/me"
+    router.push("/customer");
+  };
+
+  return (
+    <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-gray-200 rounded-2xl shadow-lg z-10 p-4 space-y-2">
+      <button
+        onClick={handleAccountClick} // Chama a função para redirecionar
+        type="button" // Usar 'button' ao invés de 'submit' em botões que não são de formulários
+        className="w-full bg-gray-800 text-white px-3 py-2 rounded-md"
+      >
+        Minha conta
+      </button>
+
+      <button
+        onClick={() => { logout(); }} // Faz o logout
+        type="button"
+        className="w-full bg-gray-800 text-white px-3 py-2 rounded-md"
+      >
+        Sair
+      </button>
+    </div>
+  );
 }

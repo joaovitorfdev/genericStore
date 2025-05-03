@@ -4,9 +4,9 @@ export const CustomerValidatorSchema = Yup.object({
 name: Yup.string()
         .strict()
         .trim("O nome não pode conter espaços no início ou no final")
-        .max(255)
+        .max(20, "O nome deve ter no máximo 20 caracteres")
         .required("")
-        .min(10, "O nome deve ter pelo menos 10 caracteres")
+        .min(5, "O nome deve ter pelo menos 5 caracteres")
         .matches(/^[a-zA-ZÀ-ÖØ-öø-ÿ0-9 ]*$/, "O nome não pode conter caracteres especiais")
         .test("no-only-spaces", "O nome não pode conter apenas espaços", value => {
             return !!value && value.trim().length > 0;

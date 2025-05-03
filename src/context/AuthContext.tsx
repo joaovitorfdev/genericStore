@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Busca os dados do usuário (customer)
   const fetchCustomerData = async (): Promise<void> => {
     try {
-      const res = await fetchWithAuth("http://localhost:8000/api/public/me");
+      const res = await fetchWithAuth("http://localhost:8000/api/customer/me");
       if (!res.ok) {
         const errorText = await res.text();
         console.error(`Erro ao buscar dados do cliente. Status: ${res.status}. Mensagem: ${errorText}`);
