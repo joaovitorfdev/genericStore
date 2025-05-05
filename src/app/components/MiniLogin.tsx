@@ -31,7 +31,7 @@ export default function MiniLogin() {
   };
   return (
 
-    <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-gray-200 rounded-2xl shadow-lg z-10 p-4">
+    <div className="absolute top-full w-64 bg-white border border-gray-200 rounded-2xl shadow-lg z-10 p-4">
 
       <form
         className="grid gap-3 "

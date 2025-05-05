@@ -10,10 +10,9 @@ import CartDropDown from "./Cart/CartDropDown";
 
 export default function NavBar() {
   const pathname = usePathname();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [userOpen, setUserOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-  const toggleDropdown = () => setDropdownOpen((prev) => !prev);
-  const toggleCartDropdown = () => setCartOpen((prev) => !prev);
+  
   const { user } = useAuth();
   const navLinks = [
     { href: "/", label: "HOME" },
@@ -23,7 +22,8 @@ export default function NavBar() {
 
   useEffect(() => {
     if (pathname === "/register" || pathname === "/login") {
-      setDropdownOpen(false);
+      setUserOpen(false);
+      setCartOpen(false);
     }
   }, [pathname]);
 
@@ -56,49 +56,47 @@ export default function NavBar() {
         })}
       </div>
 
-      <div className="ml-auto flex items-center relative gap-5 mr-40">
-        <div>
-          <div
-            className="cursor-pointer flex items-center space-x-2 text-sm md:text-lg transition-all duration-200 ease-in-out hover:text-gray-300 hover:scale-102 font-semibold"
-            onClick={toggleDropdown}
-          >
-            <UserCircleIcon className="h-8 w-8 md:h-10 md:w-10" />
+        {/* User e Cart */}
+        <div className="ml-auto flex items-center relative gap-5 mr-40 font-semibold">
+        {/* User */}
+        <div
+          onMouseEnter={() => setUserOpen(true)}
+          onMouseLeave={() => setUserOpen(false)}
+          className="relative"
+        >
+          <div className="flex cursor-pointer items-center gap-2 hover:scale-102 transition">
+            <UserCircleIcon className="h-8 w-8" />
             <span>{user ? user.first_name : "Entrar"}</span>
           </div>
 
-          {dropdownOpen && (
-            user ? (
-              <LoggedUserDropDown />
-            ) : (
-              <MiniLogin />
-            )
+          {userOpen && (
+            <div className="absolute right-44" onMouseEnter={() => setUserOpen(true)} onMouseLeave={() => setUserOpen(false)}>
+              {user ? <LoggedUserDropDown /> : <MiniLogin />}
+            </div>
           )}
-
         </div>
 
         {user && (
-          <>
-            <div
-              className="cursor-pointer flex items-center space-x-2 text-sm md:text-lg transition-all duration-200 ease-in-out hover:text-gray-300 hover:scale-102 font-semibold"
-              onClick={toggleCartDropdown}
-            >
-              <div className="relative">
-                <ShoppingCartIcon className="h-8 w-8 ml-10 md:h-10 md:w-10" />
-                {user.cart.items.length > 0 && (
-                  <span
-                    className="absolute -top-1 -right-1
-                       bg-blue-600 text-white text-xs font-bold
-                       w-5 h-5 flex items-center justify-center
-                       rounded-full"
-                  >
-                    {user.cart.items.length}
-                  </span>
-                )}
-              </div>
+          <div
+            onMouseEnter={() => setCartOpen(true)}
+            onMouseLeave={() => setCartOpen(false)}
+            className="relative"
+          >
+            <div className="flex cursor-pointer items-center hover:scale-102 transition">
+            <ShoppingCartIcon className="h-8 w-8 ml-10 md:h-10 md:w-10" />
+              {user.cart.items.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                  {user.cart.items.length}
+                </span>
+              )}
             </div>
 
-            {cartOpen && <CartDropDown />}
-          </>
+            {cartOpen && (
+              <div className="right-56 absolute" onMouseEnter={() => setCartOpen(true)} onMouseLeave={() => setCartOpen(false)}>
+                <CartDropDown />
+              </div>
+            )}
+          </div>
         )}
 
       </div>

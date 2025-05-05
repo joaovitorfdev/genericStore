@@ -7,7 +7,7 @@ import ProductPreview from "./components/productPreview";
 export default function CartDropDown() {
   const { user } = useAuth();
   const router = useRouter(); // Instancia o router
-  const divClasses = "absolute top-full  left-5  mt-2 w-96 bg-white border border-gray-200 rounded-2xl shadow-lg   space-y-2 z-10"
+  const divClasses = "absolute top-full  w-96 bg-white border border-gray-200 rounded-2xl shadow-lg  z-10"
 
   if (user?.cart.items.length === 0) {
     return (
@@ -25,7 +25,7 @@ export default function CartDropDown() {
       </div>
 
       {/* Resumo de valores */}
-      <div className="mt-5 space-y-2  p-4 text-sm font-medium">
+      <div className="space-y-2  p-4 text-sm font-medium">
         <div className="flex justify-between border-t pt-3">
           <span>Subtotal:</span>
           <span className="text-gray-900 font-semibold">
