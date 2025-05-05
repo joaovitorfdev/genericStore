@@ -1,6 +1,7 @@
 import { GetMediaLink } from "@/app/(public)/services/helper"
-import { CartItemDTO } from "@/app/types/customer/validators/CustomerDTO"
+import { CartItemDTO } from "@/app/types/customer/CartDTO"
 import { XMarkIcon } from "@heroicons/react/24/outline"  // se quiser um botão de remover
+import { useRouter } from "next/navigation"
 
 interface ProductPreviewProps  {
   item: CartItemDTO
@@ -8,11 +9,11 @@ interface ProductPreviewProps  {
 
 export default function ProductPreview({ item }: ProductPreviewProps) {
   const mainImage = item.product.images?.find(img => img.is_main)?.image ?? ""
+  const router = useRouter();
   return (
-    <div className="flex items-center bg-white rounded-2xl shadow hover:shadow-lg transition-shadow duration-200 p-4 space-x-4">
+    <div className="flex items-center bg-white rounded-2xl p-2 shadow hover:shadow-lg transition-shadow duration-200  space-x-4">
       
-      {/* Imagem do produto */}
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 cursor-pointer" onClick={() => router.push("/shop/" +  item.product.id)}>
         <img
           src={GetMediaLink(mainImage)}
           alt={item.product.name}
@@ -20,7 +21,6 @@ export default function ProductPreview({ item }: ProductPreviewProps) {
         />
       </div>
 
-      {/* Detalhes */}
       <div className="flex-1 grid gap-1">
         <h3 className="text-base font-semibold text-gray-800">
           {item.product.name}

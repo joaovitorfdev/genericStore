@@ -43,7 +43,7 @@ export default function ShopPage() {
       />
 
       <div className="flex min-h-screen flex-col md:flex-row">
-        <main className="p-6 md:ml-64 flex-1">
+        <main className=" md:ml-64 flex-1">
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
             {filteredProducts.map((product) => {
               let mainImage =

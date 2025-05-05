@@ -4,7 +4,7 @@ import Link from "next/link";
 import MiniLogin from "./MiniLogin";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/auth/AuthContext";
 import LoggedUserDropDown from "./LoggedUserDropDown";
 import CartDropDown from "./Cart/CartDropDown";
 
@@ -76,19 +76,30 @@ export default function NavBar() {
 
         </div>
 
-        <div
-          className="cursor-pointer flex items-center space-x-2 text-sm md:text-lg transition-all duration-200 ease-in-out hover:text-gray-300 hover:scale-102 font-semibold"
-          onClick={toggleCartDropdown}
-        >
-          <ShoppingCartIcon className="h-8 w-8 ml-10 md:h-10 md:w-10" > <h1>dada</h1></ShoppingCartIcon>
+        {user && (
+          <>
+            <div
+              className="cursor-pointer flex items-center space-x-2 text-sm md:text-lg transition-all duration-200 ease-in-out hover:text-gray-300 hover:scale-102 font-semibold"
+              onClick={toggleCartDropdown}
+            >
+              <div className="relative">
+                <ShoppingCartIcon className="h-8 w-8 ml-10 md:h-10 md:w-10" />
+                {user.cart.items.length > 0 && (
+                  <span
+                    className="absolute -top-1 -right-1
+                       bg-blue-600 text-white text-xs font-bold
+                       w-5 h-5 flex items-center justify-center
+                       rounded-full"
+                  >
+                    {user.cart.items.length}
+                  </span>
+                )}
+              </div>
+            </div>
 
-        </div>
-
-        {
-          cartOpen && user && (
-            <CartDropDown/>
-          )}
-
+            {cartOpen && <CartDropDown />}
+          </>
+        )}
 
       </div>
     </nav>

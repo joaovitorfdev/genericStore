@@ -10,14 +10,14 @@ import { ProductDTO } from "../../../types/ProductDTO";
 import { Size } from "@/app/types/StockDTO";
 import { AddItemToCartAsync } from "../../services/cartService";
 import { CartItemCreate } from "@/app/types/customer/CartDTO";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/auth/AuthContext";
 
 export default function ProductPage() {
   const { id } = useParams();
   const { user, fetchCustomerData } = useAuth();
 
   const router = useRouter();
-  
+
   const [product, setProduct] = useState<ProductDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +25,7 @@ export default function ProductPage() {
 
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
   const [isZoomed, setIsZoomed] = useState(false);
-  
+
   useEffect(() => {
     if (!id) return;
     GetProductByID(id)
@@ -39,7 +39,7 @@ export default function ProductPage() {
   }, [id]);
 
   const formik = useFormik({
-    initialValues:  {
+    initialValues: {
       product_id: id,
       size: "",
       quantity: 1,
@@ -49,19 +49,19 @@ export default function ProductPage() {
       size: Yup.string().required("Selecione um tamanho"),
       quantity: Yup.number()
         .min(1, "Quantidade mínima é 1")
-        .max(99 , "Quantidade máxima é 99")
+        .max(99, "Quantidade máxima é 99")
         .required("Informe a quantidade"),
     }),
     onSubmit: async (values) => {
-      if(!user){
+      if (!user) {
         router.push("/register");
         return;
       }
-      
-      if(user){
-      await AddItemToCartAsync(values as CartItemCreate)
-      fetchCustomerData()
-    }
+
+      if (user) {
+        await AddItemToCartAsync(values as CartItemCreate)
+        fetchCustomerData()
+      }
     },
   });
 
@@ -71,7 +71,7 @@ export default function ProductPage() {
       product.stocks?.find((p) => p.size === formik.values.size)?.quantity ?? 1
     );
   }, [product, formik.values.size]);
-  
+
   if (loading) return <div className="text-center py-20">Carregando...</div>;
   if (error) return <div className="text-center py-20 text-red-500">{error}</div>;
   if (!product) return <div className="text-center py-20">Produto não encontrado</div>;
@@ -102,16 +102,15 @@ export default function ProductPage() {
               onMouseMove={handleMouseMove}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-            
+
               className="relative w-full h-96 md:h-[500px] bg-white rounded-lg shadow-sm overflow-hidden"
             >
               <img
-              
+
                 src={mainImage}
                 alt={product.name}
-                className={`w-full h-full object-contain transition-transform duration-300 ease-in-out ${
-                  isZoomed ? "scale-[2.5]" : "scale-100"
-                }`}
+                className={`w-full h-full object-contain transition-transform duration-300 ease-in-out ${isZoomed ? "scale-[2.5]" : "scale-100"
+                  }`}
                 style={{
                   transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
                 }}
@@ -154,7 +153,7 @@ export default function ProductPage() {
                 <input
                   type="number"
                   min={1}
-                  max={maxStock}            
+                  max={maxStock}
                   value={formik.values.quantity}
                   onBlur={formik.handleBlur('quantity')}
                   className="w-20 p-2 border border-gray-300 rounded-md"
