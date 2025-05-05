@@ -13,7 +13,7 @@ export default function LoggedUserDropDown() {
   };
 
   return (
-    <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-gray-200 rounded-2xl shadow-lg z-10 p-4 space-y-2">
+    <div className="absolute top-full right-10 mt-2 w-64 bg-white border border-gray-200 rounded-2xl shadow-lg z-10 p-4 space-y-2">
       <button
         onClick={handleAccountClick} // Chama a função para redirecionar
         type="button" // Usar 'button' ao invés de 'submit' em botões que não são de formulários

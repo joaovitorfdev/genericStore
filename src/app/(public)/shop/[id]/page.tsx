@@ -1,37 +1,80 @@
 "use client";
-import { useEffect, useState } from "react";
-import { ProductDTO } from "../../../types/ProductDTO";
-import { GetProductByID } from "../../services/productsService";
-import { useParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import SizeSelector from "../../../components/SizeSelection";
+import { GetProductByID } from "../../services/productsService";
 import { GetMediaLink } from "../../services/helper";
+import { ProductDTO } from "../../../types/ProductDTO";
+import { Size } from "@/app/types/StockDTO";
+import { AddItemToCartAsync } from "../../services/cartService";
+import { CartItemCreate } from "@/app/types/customer/CartDTO";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ProductPage() {
-  const [product, setProduct] = useState<ProductDTO>();
   const { id } = useParams();
+  const { user, fetchCustomerData } = useAuth();
+
+  const router = useRouter();
+  
+  const [product, setProduct] = useState<ProductDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
-  const [mainImage, setMainImage] = useState<string | undefined>(undefined);
-  const [isZoomed, setIsZoomed] = useState(false);
+  const [mainImage, setMainImage] = useState<string>("");
 
+  const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
+  const [isZoomed, setIsZoomed] = useState(false);
+  
   useEffect(() => {
-    const fetchProducts = async () => {
-      if (!id) return;
-      try {
-        const data = await GetProductByID(id.toString());
+    if (!id) return;
+    GetProductByID(id)
+      .then((data) => {
         setProduct(data);
-        if (data?.images && data.images[0]?.image) {
-          setMainImage(GetMediaLink(data.images[0].image));
-        }
-      } catch (err) {
-        setError("Falha ao carregar produto");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
+        const firstImg = data.images?.[0]?.image;
+        if (firstImg) setMainImage(GetMediaLink(firstImg));
+      })
+      .catch(() => setError("Falha ao carregar produto"))
+      .finally(() => setLoading(false));
   }, [id]);
+
+  const formik = useFormik({
+    initialValues:  {
+      product_id: id,
+      size: "",
+      quantity: 1,
+    },
+    enableReinitialize: true,
+    validationSchema: Yup.object({
+      size: Yup.string().required("Selecione um tamanho"),
+      quantity: Yup.number()
+        .min(1, "Quantidade mínima é 1")
+        .max(99 , "Quantidade máxima é 99")
+        .required("Informe a quantidade"),
+    }),
+    onSubmit: async (values) => {
+      if(!user){
+        router.push("/register");
+        return;
+      }
+      
+      if(user){
+      await AddItemToCartAsync(values as CartItemCreate)
+      fetchCustomerData()
+    }
+    },
+  });
+
+  const maxStock = useMemo(() => {
+    if (!product) return 1;
+    return (
+      product.stocks?.find((p) => p.size === formik.values.size)?.quantity ?? 1
+    );
+  }, [product, formik.values.size]);
+  
+  if (loading) return <div className="text-center py-20">Carregando...</div>;
+  if (error) return <div className="text-center py-20 text-red-500">{error}</div>;
+  if (!product) return <div className="text-center py-20">Produto não encontrado</div>;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } =
@@ -47,28 +90,23 @@ export default function ProductPage() {
     setZoomPosition({ x: 50, y: 50 });
   };
 
-  const handleMiniatureClick = (e: React.MouseEvent<HTMLImageElement>) => {
-    setMainImage(e.currentTarget.src);
-  };
 
-  if (loading) return <div className="text-center py-20">Carregando...</div>;
-  if (error)
-    return <div className="text-center py-20 text-red-500">{error}</div>;
-  if (!product || !product.images || !product.images[0].image) {
-    return <div className="text-center py-20">Produto não encontrado</div>;
-  }
+
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-12 md:py-16">
         <main className="flex flex-col md:flex-row gap-8 max-w-5xl mx-auto">
+          {/* Galeria de Imagem */}
           <div className="w-full md:w-1/2 flex flex-col items-center">
             <div
-              className="relative w-full h-96 md:h-[500px] bg-white rounded-lg shadow-sm overflow-hidden"
               onMouseMove={handleMouseMove}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
+            
+              className="relative w-full h-96 md:h-[500px] bg-white rounded-lg shadow-sm overflow-hidden"
             >
               <img
+              
                 src={mainImage}
                 alt={product.name}
                 className={`w-full h-full object-contain transition-transform duration-300 ease-in-out ${
@@ -80,48 +118,74 @@ export default function ProductPage() {
               />
             </div>
             <div className="flex gap-3 mt-4 flex-wrap justify-center">
-              {product.images?.map((img, index) => (
+              {product.images?.map((img, idx) => (
                 <img
-                  key={index}
+                  key={idx}
                   src={GetMediaLink(img.image ?? "")}
-                  alt={`Thumbnail ${index + 1}`}
+                  alt={`Thumb ${idx + 1}`}
                   className="w-16 h-16 md:w-20 md:h-20 object-cover rounded-md border border-gray-200 hover:border-gray-400 cursor-pointer transition-all duration-200"
-                  onClick={handleMiniatureClick}
+                  onClick={() => setMainImage(GetMediaLink(img.image ?? ""))}
                 />
               ))}
             </div>
           </div>
 
-          {/* Seção de Detalhes */}
+          {/* Detalhes e Formulário */}
           <div className="w-full md:w-1/2 flex flex-col gap-6">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-800 uppercase">
               {product.name}
             </h1>
-            <SizeSelector stocks={product.stocks} />
-            <hr className="border-t border-gray-300" />
-            <div className="flex flex-col gap-2">
-              <p className="text-gray-500 line-through text-lg">
-                3x de{" "}
-                {new Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                }).format(Number(product.price) / 3)}
-              </p>
-              <p className="text-3xl font-bold text-gray-900">
-                {new Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                }).format(Number(product.price))}
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button className="w-full sm:w-1/2 px-4 py-3 bg-gray-800 text-white rounded-md hover:bg-gray-900 transition-colors duration-200 font-medium">
-                Add to Cart
-              </button>
-              <button className="w-full sm:w-1/2 px-4 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium">
-                Buy Now
-              </button>
-            </div>
+            {/* Form de seleção */}
+            <form onSubmit={formik.handleSubmit} className="space-y-6">
+              <SizeSelector
+                stocks={product.stocks}
+                selectedSize={formik.values.size as Size}
+                onSizeSelect={(size) => {
+                  formik.setFieldValue('size', size)
+                  formik.setFieldValue('quantity', 1)
+                }}
+              />
+              {formik.touched.size && formik.errors.size && (
+                <p className="text-red-500 text-sm">{formik.errors.size}</p>
+              )}
+
+              <div className="flex items-center gap-4">
+                <label className="font-medium">Quantidade</label>
+                <input
+                  type="number"
+                  min={1}
+                  max={maxStock}            
+                  value={formik.values.quantity}
+                  onBlur={formik.handleBlur('quantity')}
+                  className="w-20 p-2 border border-gray-300 rounded-md"
+                  onChange={(e) => {
+                    let val = parseInt(e.target.value) || 1;
+                    if (val < 1) val = 1;
+                    if (val > maxStock) val = maxStock;
+                    formik.setFieldValue("quantity", val);
+                  }}
+                />
+                {formik.touched.quantity && formik.errors.quantity && (
+                  <p className="text-red-500 text-sm">{formik.errors.quantity}</p>
+                )}
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  type="submit"
+                  className="w-full sm:w-1/2 px-4 py-3 bg-gray-800 text-white rounded-md hover:bg-gray-900 transition-colors duration-200 font-medium"
+                >
+                  Adicionar ao carrinho
+                </button>
+                <button
+                  type="button"
+                  onClick={() => formik.submitForm()}
+                  className="w-full sm:w-1/2 px-4 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium"
+                >
+                  Finalizar Compra
+                </button>
+              </div>
+            </form>
           </div>
         </main>
       </div>

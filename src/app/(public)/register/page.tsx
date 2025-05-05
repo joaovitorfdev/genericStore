@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useFormik } from "formik";
 import { CreateUser } from "../services/userService";
 import { CustomerValidatorSchema } from "@/app/types/customer/validators/customer.validator";
-import { UserDTO } from "@/app/types/customer/validators/CustomerDTO";
+import { UserCreateRequest, UserDTO } from "@/app/types/customer/validators/CustomerDTO";
 
 interface RegisterValues{
   name:string;
@@ -37,7 +37,7 @@ export default function RegisterPage() {
             password: values.password,
             document: values.document
    
-        } as UserDTO);
+        } as UserCreateRequest);
   
         console.log("Response:", response); // Aqui você printa a response no console
   
@@ -53,7 +53,7 @@ export default function RegisterPage() {
 
 
   return (
-    <div className="md:min-h-screen  flex items-center justify-center bg-white md:py-12 px-4 sm:px-6 lg:px-8">
+    <div className="  flex items-center justify-center bg-white md:py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg border border-gray-200 ">
         <div>
           <h2 className="text-center text-3xl font-bold text-gray-900">

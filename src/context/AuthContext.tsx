@@ -2,6 +2,8 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { UserDTO } from '@/app/types/customer/validators/CustomerDTO';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 interface AuthContextType {
   accessToken: string | null;
   refreshToken: string | null;
@@ -10,7 +12,6 @@ interface AuthContextType {
   user: UserDTO | null;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
-  fetchWithAuth: (url: string, options?: RequestInit) => Promise<Response>;
   fetchCustomerData: () => Promise<void>;
   refreshTokens: () => Promise<void>;
 }
@@ -23,9 +24,6 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   login: async () => false,
   logout: () => {},
-  fetchWithAuth: async () => {
-    throw new Error('fetchWithAuth not implemented');
-  },
   fetchCustomerData: async () => {
     throw new Error('fetchCustomerData not implemented');
   },
@@ -73,10 +71,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return fetch(url, opts);
   };
 
-  // Busca os dados do usuário (customer)
   const fetchCustomerData = async (): Promise<void> => {
     try {
-      const res = await fetchWithAuth("http://localhost:8000/api/customer/me");
+      const res = await fetchWithAuth(`${API_URL}/customer/me`);
       if (!res.ok) {
         const errorText = await res.text();
         console.error(`Erro ao buscar dados do cliente. Status: ${res.status}. Mensagem: ${errorText}`);
@@ -92,7 +89,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Função auxiliar para refresh do token
   const refreshAccessToken = async (currentAccessToken: string, currentRefreshToken: string) => {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+   
     const response = await fetch(`${API_URL}/token/refresh`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -135,8 +132,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Função de login – ajusta também os tempos de expiração
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
-      const API_URL = "http://localhost:8000/api/token/pair";
-      const response = await fetch(API_URL, {
+      
+      const response = await fetch(`${API_URL}/token/pair`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -198,7 +195,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         user,
         login,
         logout,
-        fetchWithAuth,
         fetchCustomerData,
         refreshTokens
       }}

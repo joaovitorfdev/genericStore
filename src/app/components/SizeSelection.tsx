@@ -1,17 +1,20 @@
-import { StockDTO } from "@/app/types/StockDTO";
-import { Size } from "@/app/types/StockDTO";
-import { useState } from "react";
+import React from "react";
+import { StockDTO, Size } from "@/app/types/StockDTO";
 
 interface SizeSelectorProps {
   stocks?: StockDTO[];
+  selectedSize: Size | "";
+  onSizeSelect: (size: Size) => void;
 }
 
-export default function SizeSelector({ stocks }: SizeSelectorProps) {
-  const stockMap = new Map(
-    stocks?.map((stock) => [stock.size, stock.quantity]) || []
-  );
-  const [selectedSize, setSelectedSize] = useState<string | undefined>(
-    undefined
+export default function SizeSelector({
+  stocks = [],
+  selectedSize,
+  onSizeSelect,
+}: SizeSelectorProps) {
+  // Mapeia cada tamanho para sua quantidade disponível
+  const stockMap = new Map<Size, number>(
+    stocks.map((stock) => [stock.size as Size, stock.quantity])
   );
 
   return (
@@ -19,24 +22,27 @@ export default function SizeSelector({ stocks }: SizeSelectorProps) {
       <label className="block text-gray-600 mb-2">Select size:</label>
       <div className="flex gap-2 flex-wrap">
         {Object.values(Size).map((size) => {
-          const quantity = stockMap.get(size) || 0; // Obtém a quantidade, padrão 0 se não existir
+          const quantity = stockMap.get(size) || 0;
+          const isSelected = selectedSize === size;
 
           return (
             <button
-              onClick={() => {
-                setSelectedSize(size);
-              }}
               key={size}
-              className={`border px-2 py-1 text-sm w-12 text-center ${
-                quantity > 0
-                  ? selectedSize === size
-                    ? "bg-gray-600 text-white"
-                    : "hover:bg-gray-100"
-                  : "opacity-15 cursor-not-allowed"
-              }`}
+              type="button"
+              onClick={() => onSizeSelect(size)}
               disabled={quantity === 0}
+              className={
+                `w-12 px-2 py-1 text-center text-sm border rounded-md transition-colors duration-200 ` +
+                (quantity > 0
+                  ? `cursor-pointer ${
+                      isSelected
+                        ? "bg-gray-800 text-white"
+                        : "hover:bg-gray-100"
+                    }`
+                  : `opacity-50 cursor-not-allowed`)
+              }
             >
-              {size}{" "}
+              {size}
             </button>
           );
         })}
