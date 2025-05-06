@@ -15,16 +15,38 @@ export const CreateUser = async (form: UserCreateRequest) => {
     });
 };
 
+
 export const GetUserAddressesAsyc = async (id: string): Promise<CustomerAddressDTO[]> => {
     const res = await fetchWithAuth(`${BASE_URL}/addresses`);
     if (!res.ok) {
-      throw new Error("failed to fetch data");
+        throw new Error("failed to fetch data");
     }
-  
+
     const data = await res.json();
     return data.map((x: any) => ({
-      ...x,
-      zipCode: x.zip_code,
+        ...x,
+        zipCode: x.zip_code,
 
     })) as CustomerAddressDTO[];
-  }
+}
+
+export const AddUserAdressAsync = async (form: CustomerAddressDTO): Promise<CustomerAddressDTO> =>{
+    
+    const res = await fetchWithAuth(`${BASE_URL}/addresses`,
+    {   
+        method:"POST",
+        body: JSON.stringify({
+            "zip_code": form.zipCode.replace("-",""),
+            ...form
+
+        })    
+    });
+
+    if (!res.ok) {
+        throw new Error("failed to fetch data");
+    }
+
+    const data = await res.json();
+    return {...data, zipCode: data.zip_code } as CustomerAddressDTO;
+}
+
