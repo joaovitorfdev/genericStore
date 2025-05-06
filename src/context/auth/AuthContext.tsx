@@ -45,26 +45,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter()
   const pathname = usePathname()
 
-  // 1) Carrega tokens do localStorage só uma vez
   useEffect(() => {
-    const sa = localStorage.getItem('accessToken')
-    const sr = localStorage.getItem('refreshToken')
-    if (sa) setAccessToken(sa)
-    if (sr) setRefreshToken(sr)
-    setAuthResolved(true)
-  }, [])
 
-  useEffect(() => {
-    if (!accessToken) {
-      setUser(null)
-      return
-    }
-    ;(async () => {
-      try {
-        fetchCustomerData()
-      } catch {
-        setUser(null)
-      }
+   (async () => {
+       await fetchCustomerData()
     })()
   }, [accessToken])
 
@@ -80,18 +64,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const isPublic = match(publicRoutes);
     const isCustomer = match(customerRoutes);
+    console.log("user", user)
 
-    // visitante tentando rota privada → login
     if (!user && !isPublic) {
+      console.log(user)
+
       router.push('/login');
       return;
     }
-    // cliente logado em rota não permitida → home
-    if (user && !isPublic && !isCustomer) {
+    if (!user && !isPublic && !isCustomer) {
+      console.log(user)
       router.push('/');
       return;
     }
-  }, [authResolved, user, pathname, router]);
+  }, [pathname, router]);
 
 
   const login = async (username: string, password: string) => {
@@ -115,16 +101,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 
   const fetchCustomerData = async (): Promise<void> => {
+    setAuthResolved(true)
+
+    const sa = localStorage.getItem('accessToken')
+    const sr = localStorage.getItem('refreshToken')
+    if (sa) setAccessToken(sa)
+    if (sr) setRefreshToken(sr)
+
+    if (!accessToken) {
+      setUser(null)
+      return
+    }
     try {
+      
       const res = await fetchWithAuth(`${API_URL}/customer/me`);
       if (!res.ok) {
-        throw new Error("Erro ao buscar dados do cliente");
+       return
       }
       const data: UserDTO = await res.json();
       setUser(data);
+      const sa = localStorage.getItem('accessToken')
+      const sr = localStorage.getItem('refreshToken')
+      if (sa) setAccessToken(sa)
+      if (sr) setRefreshToken(sr)
+        
     } catch (err) {
       console.error(err);
     }
+    setAuthResolved(true)
+
   };
 
   

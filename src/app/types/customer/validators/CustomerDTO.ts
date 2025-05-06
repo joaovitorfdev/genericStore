@@ -15,7 +15,7 @@ export interface UserDTO {
   username: string;
   email: string;
   document?: string;
-  id?: string;
+  id: string;
   cart:CartDTO;
 }
 
@@ -27,6 +27,13 @@ export interface CustomerAddressDTO {
   neighborhood: string;
   number: string;
   id?: string;
+}
+export type CustomerAddressRequest = {
+  zipCode: string;
+  street: string;
+  complement?: string;
+  neighborhood: string;
+  number: string;
 }
 
 

@@ -12,10 +12,11 @@ export default function CartDropDown() {
   if (user?.cart.items.length === 0) {
     return (
       <div className={divClasses}>
-        <h1 className="font-bold justify-self-center">Seu carinho esta vazio {":("}</h1>
+        <h1 className="font-bold justify-self-center p-4">Seu carinho esta vazio {":("}</h1>
       </div>
     )
   }
+
   return (
     <div className={divClasses}>
       <div className="max-h-[50vh] overflow-y-auto space-y-3 p-1 ">
@@ -24,7 +25,7 @@ export default function CartDropDown() {
         ))}
       </div>
 
-      {/* Resumo de valores */}
+    {/* Resumo de valores */}
       <div className="space-y-2  p-4 text-sm font-medium">
         <div className="flex justify-between border-t pt-3">
           <span>Subtotal:</span>
@@ -41,11 +42,11 @@ export default function CartDropDown() {
             {new Intl.NumberFormat("en-US", {
               style: "currency",
               currency: "USD",
-            }).format(Number(user?.cart.subtotal / 3))}
+            }).format(Number(user?.cart.subtotal) / 3)}
           </span>
         </div>
         <button
-        className="w-full mt-4 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-center font-semibold"
+        className="w-full mt-4 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-center font-semibold cursor-pointer"
         onClick={() => router.push("/checkout")}
       >
         Finalizar Compra

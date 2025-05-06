@@ -2,7 +2,7 @@
 import { ShoppingCartIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import MiniLogin from "./MiniLogin";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/auth/AuthContext";
 import LoggedUserDropDown from "./LoggedUserDropDown";
@@ -12,14 +12,14 @@ export default function NavBar() {
   const pathname = usePathname();
   const [userOpen, setUserOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-  
+  const router = useRouter();
   const { user } = useAuth();
   const navLinks = [
     { href: "/", label: "HOME" },
     { href: "/shop", label: "SHOP" },
     { href: "/about", label: "ABOUT" },
   ];
-
+  
   useEffect(() => {
     if (pathname === "/register" || pathname === "/login") {
       setUserOpen(false);
@@ -82,7 +82,7 @@ export default function NavBar() {
             onMouseLeave={() => setCartOpen(false)}
             className="relative"
           >
-            <div className="flex cursor-pointer items-center hover:scale-102 transition">
+            <div className="flex cursor-pointer items-center hover:scale-102 transition" onClick={() => router.push("/checkout")} >
             <ShoppingCartIcon className="h-8 w-8 ml-10 md:h-10 md:w-10" />
               {user.cart.items.length > 0 && (
                 <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">

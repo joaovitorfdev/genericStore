@@ -1,5 +1,6 @@
-import { CartItemCreate } from "@/app/types/customer/CartDTO";
+import { CartItemCreate, CartItemUpdate } from "@/app/types/customer/CartDTO";
 
+const BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/customer/cart`
 export async function fetchWithAuth(
     input: RequestInfo,
     init: RequestInit = {}
@@ -23,11 +24,26 @@ export async function fetchWithAuth(
   }
 
 export const AddItemToCartAsync = async (form: CartItemCreate) => {
-    const response = await fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/customer/cart`, {
+    const response = await fetchWithAuth(BASE_URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(form),
+    });
+};
+export const UpdateCartItemAsync = async (id:string, form: CartItemUpdate) => {
+        await fetchWithAuth(`${BASE_URL}/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+    });
+};
+
+export const RemoveCartItemAsync = async (id:string) => {
+    await fetchWithAuth(`${BASE_URL}/${id}`, {
+        method: 'DELETE',
     });
 };

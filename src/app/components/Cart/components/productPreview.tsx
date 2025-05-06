@@ -1,5 +1,7 @@
+import { RemoveCartItemAsync } from "@/app/(public)/services/cartService"
 import { GetMediaLink } from "@/app/(public)/services/helper"
 import { CartItemDTO } from "@/app/types/customer/CartDTO"
+import { useAuth } from "@/context/auth/AuthContext"
 import { XMarkIcon } from "@heroicons/react/24/outline"  // se quiser um botão de remover
 import { useRouter } from "next/navigation"
 
@@ -10,6 +12,12 @@ interface ProductPreviewProps  {
 export default function ProductPreview({ item }: ProductPreviewProps) {
   const mainImage = item.product.images?.find(img => img.is_main)?.image ?? ""
   const router = useRouter();
+  const { fetchCustomerData } = useAuth();
+  const handleRemoveItem = async () => {
+    await RemoveCartItemAsync(item.id);
+    fetchCustomerData();
+
+  }
   return (
     <div className="flex items-center bg-white rounded-2xl p-2 shadow hover:shadow-lg transition-shadow duration-200  space-x-4">
       
@@ -40,10 +48,10 @@ export default function ProductPreview({ item }: ProductPreviewProps) {
        
       </div>
 
-      {/* Botão de remover (opcional) */}
       <button
-        className="text-gray-400 hover:text-red-500 transition-colors"
+        className="text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
         aria-label="Remover item"
+        onClick={() => handleRemoveItem()}
       >
         <XMarkIcon className="w-5 h-5" />
       </button>

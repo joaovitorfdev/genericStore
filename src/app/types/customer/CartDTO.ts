@@ -14,6 +14,11 @@ export type CartItemCreate = {
     size:string;
 }
 
+export type CartItemUpdate = {
+    quantity?: number;
+    size?:string;
+}
+
 export interface CartDTO{
     items: CartItemDTO[];
     subtotal:number;

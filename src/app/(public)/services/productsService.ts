@@ -25,6 +25,7 @@ export async  function GetProducts(): Promise<ProductDTO[]> {
     throw error; // Repropaga o erro para ser tratado pelo chamador
   }
 }
+
 export async  function GetProductByID(id:string | string[]): Promise<ProductDTO> {
   try {
     const response = await fetch(`${BASE_URL}/${id}`, {

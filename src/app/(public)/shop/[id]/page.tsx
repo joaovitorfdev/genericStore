@@ -8,9 +8,10 @@ import { GetProductByID } from "../../services/productsService";
 import { GetMediaLink } from "../../services/helper";
 import { ProductDTO } from "../../../types/ProductDTO";
 import { Size } from "@/app/types/StockDTO";
-import { AddItemToCartAsync } from "../../services/cartService";
+import { AddItemToCartAsync, UpdateCartItemAsync } from "../../services/cartService";
 import { CartItemCreate } from "@/app/types/customer/CartDTO";
 import { useAuth } from "@/context/auth/AuthContext";
+import { QuantitySelector } from "../../checkout/page";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -57,11 +58,17 @@ export default function ProductPage() {
         router.push("/register");
         return;
       }
-
-      if (user) {
+      const existingItem = user.cart.items.find(item =>
+        item.product.id === id && item.size === formik.values.size
+      )
+      if(!existingItem){
         await AddItemToCartAsync(values as CartItemCreate)
-        fetchCustomerData()
       }
+      else{
+        await UpdateCartItemAsync(existingItem.id,  {quantity:values.quantity})
+      }
+  
+      fetchCustomerData()
     },
   });
 
@@ -94,7 +101,7 @@ export default function ProductPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="container mx-auto px-4 py-12 md:py-16">
+      <div className="container mx-auto px-4  2xl:py-16 ">
         <main className="flex flex-col md:flex-row gap-8 max-w-5xl mx-auto">
           {/* Galeria de Imagem */}
           <div className="w-full md:w-1/2 flex flex-col items-center">
@@ -103,13 +110,13 @@ export default function ProductPage() {
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
 
-              className="relative w-full h-96 md:h-[500px] bg-white rounded-lg shadow-sm overflow-hidden"
+              className="relative  bg-white rounded-lg shadow-sm overflow-hidden"
             >
               <img
 
                 src={mainImage}
                 alt={product.name}
-                className={`w-full h-full object-contain transition-transform duration-300 ease-in-out ${isZoomed ? "scale-[2.5]" : "scale-100"
+                className={` object-contain transition-transform duration-300 ease-in-out ${isZoomed ? "scale-[2.5]" : "scale-100"
                   }`}
                 style={{
                   transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
@@ -150,20 +157,12 @@ export default function ProductPage() {
 
               <div className="flex items-center gap-4">
                 <label className="font-medium">Quantidade</label>
-                <input
-                  type="number"
-                  min={1}
-                  max={maxStock}
-                  value={formik.values.quantity}
-                  onBlur={formik.handleBlur('quantity')}
-                  className="w-20 p-2 border border-gray-300 rounded-md"
-                  onChange={(e) => {
-                    let val = parseInt(e.target.value) || 1;
-                    if (val < 1) val = 1;
-                    if (val > maxStock) val = maxStock;
-                    formik.setFieldValue("quantity", val);
-                  }}
-                />
+                 <QuantitySelector
+                                       value={formik.values.quantity}
+                                       min={1}
+                                       max={maxStock}
+                                       onChange={(newVal) =>   formik.setFieldValue("quantity", newVal)}
+                                   />
                 {formik.touched.quantity && formik.errors.quantity && (
                   <p className="text-red-500 text-sm">{formik.errors.quantity}</p>
                 )}
