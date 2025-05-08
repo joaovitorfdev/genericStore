@@ -38,7 +38,7 @@ export default function AddressesArea() {
       <button
         onClick={() => setIsModalOpen(true)}
         className="
-          fixed bottom-6 left-1/2 transform -translate-x-1/2 z-10
+          fixed bottom-6 left-1/2  transform -translate-x-1/2 z-10
           bg-blue-600 hover:bg-blue-700 text-white
           px-6 py-3 rounded-full
           font-semibold cursor-pointer

@@ -33,49 +33,46 @@ export default function ShopPage() {
       ? products
       : products.filter(
           (product) => product.category === activeCategory.toLowerCase()
-        ); // Ajuste conforme sua estrutura de dados
+        ); 
 
-  return (
-    <div>
-      <CategoryBar
-        activeCategory={activeCategory}
-        setActiveCategory={setActiveCategory}
-      />
-
-      <div className="flex min-h-screen flex-col md:flex-row">
-        <main className=" md:ml-64 flex-1">
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
-            {filteredProducts.map((product) => {
-              let mainImage =
-                product.images && product.images.length > 0
-                  ? product.images.find((img) => img.is_main)?.image ||
-                    product.images[0].image
-                  : null;
-              let imgSrc = mainImage
-                ? `${GetMediaLink(mainImage)}`
-                : "https://via.placeholder.com/200";
-
-              return (
-                <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  price={new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  }).format(Number(product.price))}
-                  imgSrc={imgSrc}
-                  imgHoverSrc={
-                    product.images?.[1]?.image
-                      ? GetMediaLink(product.images[1].image)
-                      : ""
-                  }
-                />
-              );
-            })}
+        return (
+          <div className="flex flex-col md:flex-row min-h-screen">
+            <aside className="w-full md:w-64">
+              <CategoryBar
+                activeCategory={activeCategory}
+                setActiveCategory={setActiveCategory}
+              />
+            </aside>
+      
+            {/* Main com produtos */}
+            <main className="flex-1 p-4">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {filteredProducts.map((product) => {
+                  const mainImg = product.images?.find((i) => i.is_main)?.image
+                  const imgSrc = mainImg
+                    ? GetMediaLink(mainImg)
+                    : "https://via.placeholder.com/200"
+      
+                  return (
+                    <ProductCard
+                      key={product.id}
+                      id={product.id}
+                      name={product.name}
+                      price={new Intl.NumberFormat("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      }).format(Number(product.price))}
+                      imgSrc={imgSrc}
+                      imgHoverSrc={
+                        product.images?.[1]?.image
+                          ? GetMediaLink(product.images[1].image)
+                          : imgSrc
+                      }
+                    />
+                  );
+                })}
+              </div>
+            </main>
           </div>
-        </main>
-      </div>
-    </div>
-  );
-}
+        );
+      }

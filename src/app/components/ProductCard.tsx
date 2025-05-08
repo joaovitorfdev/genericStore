@@ -11,7 +11,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ name, price, imgSrc, imgHoverSrc, id }: ProductCardProps) {
   return (
-    <li className=" grid bg-transparent rounded-lg p-4  flex-col items-center justify-between w-auto h-auto">
+    <li className="grid bg-transparent flex-col items-center justify-between">
       <Link href={`/shop/${id}`} className="overflow-hidden block group relative">
         <Image
           src={imgSrc}

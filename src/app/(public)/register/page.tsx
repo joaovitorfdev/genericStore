@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from 'next/link';
 import { useFormik } from "formik";
-import { CreateUser } from "../services/userService";
+import { CreateUser } from "../services/publicService";
 import { CustomerValidatorSchema } from "@/app/types/customer/validators/customer.validator";
 import { UserCreateRequest, UserDTO } from "@/app/types/customer/validators/CustomerDTO";
 

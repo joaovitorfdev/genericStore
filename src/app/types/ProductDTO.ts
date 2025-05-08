@@ -15,7 +15,7 @@ export enum Category {
     price: number; // Decimal é serializado como number em JSON
     category: Category; // Usando o enum Category
     stocks?: StockDTO[]; // Opcional, lista de estoques
-    images?: ProductImageDTO[]; // Opcional, lista de imagens
+    images: ProductImageDTO[]; // Opcional, lista de imagens
     created_at?: string; // ISO string (ex.: "2025-03-16T12:00:00Z") do BaseModel
     updated_at?: string; // ISO string do BaseModel
   }

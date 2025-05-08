@@ -9,20 +9,20 @@ import { QuantitySelector } from "../page"
 
 interface ProductPreviewProps {
     item: CartItemDTO
+    setSelectedProduct: React.Dispatch<React.SetStateAction<string>>
 }
 
-export default function ProductPreview({ item }: ProductPreviewProps) {
+export default function ProductPreview({ item, setSelectedProduct }: ProductPreviewProps) {
     const mainImage = item.product.images?.find(img => img.is_main)?.image ?? ""
     const router = useRouter()
     const { fetchCustomerData } = useAuth()
-    
+
     const [qty, setQty] = useState(item.quantity)
 
     const handleRemoveItem = async () => {
         await RemoveCartItemAsync(item.id)
         fetchCustomerData()
     }
-
 
     const maxStock = item.product.stocks?.find(s => s.size === item.size)?.quantity ?? 1
 
@@ -33,13 +33,17 @@ export default function ProductPreview({ item }: ProductPreviewProps) {
     }
 
     return (
-        <div className="flex items-center bg-white rounded-2xl p-2  shadow hover:shadow-lg transition-shadow duration-200 space-x-4">
+        <div className="flex items-center bg-white rounded-2xl p-2  shadow hover:shadow-lg transition-shadow duration-200 space-x-4 mb-2">
 
-            <div className="flex-shrink-0 cursor-pointer" onClick={() => router.push("/shop/" + item.product.id)}>
+            <div className="flex-shrink-0 cursor-pointer" onClick={
+                () =>
+                    setSelectedProduct(GetMediaLink(item.product.images[0].image ?? ""))
+                    // router.push("/shop/" + item.product.id)
+                }>
                 <img
                     src={GetMediaLink(mainImage)}
                     alt={item.product.name}
-                    className="w-20 h-20 object-cover rounded-lg border border-gray-200"
+                    className="w-20 h-20 object-cover rounded-lg border border-gray-100"
                 />
             </div>
 

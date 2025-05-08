@@ -12,6 +12,9 @@ import { AddItemToCartAsync, UpdateCartItemAsync } from "../../services/cartServ
 import { CartItemCreate } from "@/app/types/customer/CartDTO";
 import { useAuth } from "@/context/auth/AuthContext";
 import { QuantitySelector } from "../../checkout/page";
+import ZoomableImage from "@/app/components/ImageContainer";
+import { CalcFreightAsync } from "../../services/integrations/melhorEnvio/freightService";
+import FreightArea from "./components/FreightArea";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -24,9 +27,9 @@ export default function ProductPage() {
   const [error, setError] = useState<string | null>(null);
   const [mainImage, setMainImage] = useState<string>("");
 
-  const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
-  const [isZoomed, setIsZoomed] = useState(false);
 
+
+ 
   useEffect(() => {
     if (!id) return;
     GetProductByID(id)
@@ -61,13 +64,13 @@ export default function ProductPage() {
       const existingItem = user.cart.items.find(item =>
         item.product.id === id && item.size === formik.values.size
       )
-      if(!existingItem){
+      if (!existingItem) {
         await AddItemToCartAsync(values as CartItemCreate)
       }
-      else{
-        await UpdateCartItemAsync(existingItem.id,  {quantity:values.quantity})
+      else {
+        await UpdateCartItemAsync(existingItem.id, { quantity: values.quantity })
       }
-  
+
       fetchCustomerData()
     },
   });
@@ -83,46 +86,17 @@ export default function ProductPage() {
   if (error) return <div className="text-center py-20 text-red-500">{error}</div>;
   if (!product) return <div className="text-center py-20">Produto não encontrado</div>;
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const { left, top, width, height } =
-      e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - left) / width) * 100;
-    const y = ((e.clientY - top) / height) * 100;
-    setZoomPosition({ x, y });
-  };
-
-  const handleMouseEnter = () => setIsZoomed(true);
-  const handleMouseLeave = () => {
-    setIsZoomed(false);
-    setZoomPosition({ x: 50, y: 50 });
-  };
-
+ 
 
 
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4  2xl:py-16 ">
         <main className="flex flex-col md:flex-row gap-8 max-w-5xl mx-auto">
-          {/* Galeria de Imagem */}
           <div className="w-full md:w-1/2 flex flex-col items-center">
-            <div
-              onMouseMove={handleMouseMove}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
 
-              className="relative  bg-white rounded-lg shadow-sm overflow-hidden"
-            >
-              <img
+            <ZoomableImage src={mainImage} alt={product.name} />
 
-                src={mainImage}
-                alt={product.name}
-                className={` object-contain transition-transform duration-300 ease-in-out ${isZoomed ? "scale-[2.5]" : "scale-100"
-                  }`}
-                style={{
-                  transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
-                }}
-              />
-            </div>
             <div className="flex gap-3 mt-4 flex-wrap justify-center">
               {product.images?.map((img, idx) => (
                 <img
@@ -157,12 +131,12 @@ export default function ProductPage() {
 
               <div className="flex items-center gap-4">
                 <label className="font-medium">Quantidade</label>
-                 <QuantitySelector
-                                       value={formik.values.quantity}
-                                       min={1}
-                                       max={maxStock}
-                                       onChange={(newVal) =>   formik.setFieldValue("quantity", newVal)}
-                                   />
+                <QuantitySelector
+                  value={formik.values.quantity}
+                  min={1}
+                  max={maxStock}
+                  onChange={(newVal) => formik.setFieldValue("quantity", newVal)}
+                />
                 {formik.touched.quantity && formik.errors.quantity && (
                   <p className="text-red-500 text-sm">{formik.errors.quantity}</p>
                 )}
@@ -184,6 +158,7 @@ export default function ProductPage() {
                 </button>
               </div>
             </form>
+            <FreightArea productId={id as string}></FreightArea>
           </div>
         </main>
       </div>

@@ -22,5 +22,11 @@ export type CartItemUpdate = {
 export interface CartDTO{
     items: CartItemDTO[];
     subtotal:number;
+    service: string;
+
     id:string;
   }
+
+export type CartUpdateRequest = {
+  service: number;
+}
