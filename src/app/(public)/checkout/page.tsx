@@ -65,7 +65,7 @@ export default function CheckoutPage() {
 
             </section>
 
-            <aside className="rounded-lg p-12 hidden md:block">
+            <aside className="rounded-lg  hidden md:block">
                 {selectedProduct !== "" ? (
                     <ZoomableImage src={selectedProduct} alt="Imagem do produto selecionado" />
                 ) : (

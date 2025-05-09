@@ -1,31 +1,41 @@
+import { UpdateCart } from "@/app/(public)/services/cartService";
 import { ServicesDTO } from "@/app/types/integrations/melhorEnvio/FormsDTO";
 import { useAuth } from "@/context/auth/AuthContext";
 import { useState } from "react";
 
 interface FreightCardProps {
   service: ServicesDTO;
+  toCep:string;
 }
 
 export default function FreightCard({
   service,
+  toCep
 }: FreightCardProps) {
 
-  const {user} = useAuth();
+  const {user, fetchCustomerData} = useAuth();
   const isSelected = user?.cart?.service === service?.id;
+
+  const changeService = async () =>{
+        await UpdateCart({
+          service:service.id,
+          to_cep: toCep.replace("-", "")
+        })
+        await fetchCustomerData()
+  }
   return (
     <label
       htmlFor={service.id}
       className="w-full bg-white border border-gray-200 rounded-xl shadow-md p-4 flex items-center gap-4 cursor-pointer hover:border-blue-400 transition-colors"
     >
-      {/* Radio button customizado */}
-      <input
+      { user && (<input
         type="radio"
         id={service.id}
         value={service.id}
         checked={isSelected}
-        // onChange={() => onChange(service.id)}
+        onChange={() => changeService()}
         className="h-5 w-5 text-blue-600 border-gray-300 rounded-full focus:ring-blue-500"
-      />
+      />)}
 
       {/* Logo da transportadora */}
       <img
@@ -43,7 +53,7 @@ export default function FreightCard({
           Prazo:{" "}
           <span className="font-medium text-gray-800">
             {service.delivery_time.toString()} dia
-            {service.delivery_time > 1 ? "s" : ""}
+            {Number(service.delivery_time) > 1 ? "s" : ""}
           </span>
         </p>
         <p className="text-sm text-gray-600">

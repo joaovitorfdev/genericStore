@@ -23,10 +23,12 @@ export interface CartDTO{
     items: CartItemDTO[];
     subtotal:number;
     service: string;
-
+    to_cep:string
     id:string;
   }
 
+
 export type CartUpdateRequest = {
-  service: number;
+  to_cep?: string;
+  service?: string;
 }
