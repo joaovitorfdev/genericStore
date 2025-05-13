@@ -1,20 +1,27 @@
 'use client'
-import UserAreaBar from "@/app/components/UserAreaBar";
 import { useState } from "react";
 import Me from "./me/page";
 import AddressesArea from "./addresses/page";
+import SideBar from "@/app/components/SideBar";
 
 export default function CustomerArea() {
   const [selectedArea, setSelectedArea] = useState("Seus dados");
-
+  const areas = [
+    "Seus dados",
+    "Trocas",
+    "Endereços",
+    "Sair",
+  
+  ];
   return (
-    <div className="md:flex"> {/* layout em linha */}
+    <div className="md:flex"> 
       
-      {/* Sidebar lateral com largura fixa */}
       <div className="md:w-64">
-        <UserAreaBar
-          selectedArea={selectedArea}
-          setSelectedArea={setSelectedArea}
+        <SideBar
+        
+          labels={areas}
+          activeLabel={selectedArea}
+          setActiveLabel={setSelectedArea}
         />
       </div>
 

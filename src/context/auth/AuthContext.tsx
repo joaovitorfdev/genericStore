@@ -92,7 +92,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
  
-  
     if (!isCustomerPath && !isAdminPath) {
       router.push("/");
     }
@@ -111,6 +110,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setRefreshToken(data.refresh)
       localStorage.setItem('accessToken', data.access)
       localStorage.setItem('refreshToken', data.refresh)
+      router.push('/shop')
       return true
     } catch {
       return false

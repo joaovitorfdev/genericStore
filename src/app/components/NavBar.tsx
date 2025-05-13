@@ -65,7 +65,7 @@ export default function NavBar() {
         >
           <button className="flex items-center gap-2 hover:scale-105 transition">
             <UserCircleIcon className="h-8 w-8" />
-            <span className="font-medium">{user ? user.first_name : "Entrar"}</span>
+            <span className="font-medium text-center">{user ? user.first_name : "Entrar"}</span>
           </button>
           {userOpen && (
             <div className="absolute right-0">
