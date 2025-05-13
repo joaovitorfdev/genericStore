@@ -33,7 +33,7 @@ export default function ProductCard({ name, price, imgSrc, imgHoverSrc, id }: Pr
       </Link>
 
       <div className="text-center mt-4">
-        <h3 className="text-lg text-gray-500 transition-colors duration-700 hover:text-black">
+        <h3 className="text-lg text-nowrap  text-gray-500 transition-colors duration-700 hover:text-black">
           {name}
         </h3>
         <p className="text-xl font-bold text-black mt-2">{price}</p>

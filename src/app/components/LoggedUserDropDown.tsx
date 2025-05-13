@@ -1,33 +1,50 @@
+"use client";
+
 import { useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { UserIcon, ArrowRightOnRectangleIcon, ChartBarIcon } from "@heroicons/react/24/outline";
 import { useAuth } from "@/context/auth/AuthContext";
-import { useRouter } from 'next/navigation'
 
 export default function LoggedUserDropDown() {
-  const { user, logout } = useAuth();
-  const router = useRouter(); // Instancia o router
+  const { user,isAdmin, logout } = useAuth();
+  const router = useRouter();
 
   const handleAccountClick = () => {
-    // Redireciona o usuário para a página "customer/me"
     router.push("/customer");
   };
 
+  const buttonClasses = "w-full flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded-md transition-colors"
   return (
-    <div className="absolute top-full  w-64 bg-white border border-gray-200 rounded-2xl shadow-lg z-10 p-4 space-y-2">
+    <div className="relative top-full left-1/4 mt-2 w-56 bg-white border border-gray-200 rounded-md shadow-lg z-20 p-2">
+      {/* Container flex para centralizar verticalmente */}
+      {
+        isAdmin && (
+          <button
+          onClick={() => router.push("/dashboard")}
+          className={buttonClasses}
+          type="button"
+        >
+          <ChartBarIcon className="w-5 h-5 text-gray-800 flex-shrink-0" />
+          <span className="flex-1 text-center text-gray-800">Dashboard</span>
+        </button>
+        )
+      }
       <button
-        onClick={handleAccountClick} // Chama a função para redirecionar
-        type="button" // Usar 'button' ao invés de 'submit' em botões que não são de formulários
-        className="w-full bg-gray-800 text-white px-3 py-2 rounded-md"
-      >
-        Minha conta
-      </button>
-
-      <button
-        onClick={() => { logout(); }} // Faz o logout
+        onClick={handleAccountClick}
+        className={buttonClasses}
         type="button"
-        className="w-full bg-gray-800 text-white px-3 py-2 rounded-md"
       >
-        Sair
+        <UserIcon className="w-5 h-5 text-gray-800 flex-shrink-0" />
+        <span className="flex-1 text-center text-gray-800">Minha conta</span>
+      </button>
+      <hr className="border-gray-200 my-1" />
+      <button
+        onClick={() => logout()}
+        className={buttonClasses}
+        type="button"
+      >
+        <ArrowRightOnRectangleIcon className="w-5 h-5 text-gray-800 flex-shrink-0" />
+        <span className="flex-1 text-center text-gray-800">Sair</span>
       </button>
     </div>
   );

@@ -9,6 +9,10 @@ export type UserCreateRequest = {
   document?: string;
 }
 
+export interface GroupDTO {
+  name:string;
+  id: string;
+}
 export interface UserDTO {
   first_name: string;
   last_name: string;
@@ -17,6 +21,7 @@ export interface UserDTO {
   document?: string;
   id: string;
   cart:CartDTO;
+  groups:GroupDTO[];
 }
 
 

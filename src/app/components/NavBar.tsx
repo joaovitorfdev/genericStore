@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/context/auth/AuthContext";
 import LoggedUserDropDown from "./LoggedUserDropDown";
 import CartDropDown from "./Cart/CartDropDown";
-
+import logo from "../../../public/logo.png"
 export default function NavBar() {
   const pathname = usePathname();
   const [userOpen, setUserOpen] = useState(false);
@@ -17,9 +17,9 @@ export default function NavBar() {
   const navLinks = [
     { href: "/", label: "HOME" },
     { href: "/shop", label: "SHOP" },
-    { href: "/about", label: "ABOUT" },
+    { href: "/sale", label: "SALE" },
   ];
-  
+
   useEffect(() => {
     if (pathname === "/register" || pathname === "/login") {
       setUserOpen(false);
@@ -30,10 +30,10 @@ export default function NavBar() {
   return (
     <nav className="bg-white medium-text w-full text-black p-4 flex items-center h-28 relative">
       {/* Logo à esquerda */}
-      <div className="flex justify-center w-full md:w-auto md:justify-start">
+      <div className="flex justify-center w-full mr-auto md:w-auto md:justify-start">
         <img
 
-          src="https://cdn.discordapp.com/attachments/1336112434666012716/1353925131587813437/pbmz_aim.png?ex=67e36c8a&is=67e21b0a&hm=9538c880ab9fd28ebd0e7df5b961d0cc05980386f3c718f88fab74e03dda3306&"
+          src={"/logo.png"}
           alt="Logo"
           className="w-40"
         />
@@ -56,43 +56,44 @@ export default function NavBar() {
         })}
       </div>
 
-        {/* User e Cart */}
-        <div className="ml-auto flex items-center relative gap-5 mr-40 font-semibold">
+      <div className="flex items-center gap-10 flex-shrink-0">
         {/* User */}
         <div
+          className="relative inline-block "
           onMouseEnter={() => setUserOpen(true)}
           onMouseLeave={() => setUserOpen(false)}
-          className="relative"
         >
-          <div className="flex cursor-pointer items-center gap-2 hover:scale-102 transition">
+          <button className="flex items-center gap-2 hover:scale-105 transition">
             <UserCircleIcon className="h-8 w-8" />
-            <span>{user ? user.first_name : "Entrar"}</span>
-          </div>
-
+            <span className="font-medium">{user ? user.first_name : "Entrar"}</span>
+          </button>
           {userOpen && (
-            <div className="absolute right-44" onMouseEnter={() => setUserOpen(true)} onMouseLeave={() => setUserOpen(false)}>
+            <div className="absolute right-0">
               {user ? <LoggedUserDropDown /> : <MiniLogin />}
             </div>
           )}
         </div>
 
+        {/* Cart */}
         {user && (
           <div
+            className="relative inline-block"
             onMouseEnter={() => setCartOpen(true)}
             onMouseLeave={() => setCartOpen(false)}
-            className="relative"
           >
-            <div className="flex cursor-pointer items-center hover:scale-102 transition" onClick={() => router.push("/checkout")} >
-            <ShoppingCartIcon className="h-8 w-8 ml-10 md:h-10 md:w-10" />
+            <button
+              className="flex items-center hover:scale-105 transition"
+              onClick={() => router.push("/checkout")}
+            >
+              <ShoppingCartIcon className="h-8 w-8" />
               {user.cart.items.length > 0 && (
                 <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
                   {user.cart.items.length}
                 </span>
               )}
-            </div>
-
+            </button>
             {cartOpen && (
-              <div className="right-56 absolute" onMouseEnter={() => setCartOpen(true)} onMouseLeave={() => setCartOpen(false)}>
+              <div className="absolute right-0 ">
                 <CartDropDown />
               </div>
             )}

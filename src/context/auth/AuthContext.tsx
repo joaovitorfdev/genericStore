@@ -16,11 +16,13 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || ''
 // Defina aqui as rotas públicas e de cliente
 const publicRoutes = ['/login', '/register', '/shop/*' , '/']
 const customerRoutes = ['/checkout/*', '/customer/*']
+const adminRoutes = ['/dashboard/*']
 
 interface AuthContextType {
   accessToken: string | null
   refreshToken: string | null
   user: UserDTO | null
+  isAdmin:Boolean
   login: (username: string, password: string) => Promise<boolean>
   logout: () => void,
   fetchCustomerData: () => void
@@ -31,6 +33,7 @@ const AuthContext = createContext<AuthContextType>({
   accessToken: null,
   refreshToken: null,
   user: null,
+  isAdmin:false,
   login: async () => false,
   logout: () => {},
   fetchCustomerData: () => {},
@@ -40,6 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null)
   const [refreshToken, setRefreshToken] = useState<string | null>(null)
   const [user, setUser] = useState<UserDTO | null>(null)
+  const [isAdmin, setIsAdmin] = useState<Boolean>(false)
   const [authResolved, setAuthResolved] = useState(false)
 
   const router = useRouter()
@@ -53,32 +57,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [accessToken])
 
   useEffect(() => {
-    if (!authResolved) return;
-
-    const match = (list: string[]) =>
-      list.some((route) =>
-        route.endsWith('/*')
+    if (!authResolved) return; // espera a autenticação carregar
+  
+    // Helper que checa se o pathname bate com alguma rota da lista
+    const match = (routes: string[]) =>
+      routes.some((route) =>
+        route.endsWith("/*")
           ? pathname.startsWith(route.slice(0, -2))
           : pathname === route
       );
+  
+    const isPublicPath = match(publicRoutes);
+    const isCustomerPath = match(customerRoutes);
+    const isAdminPath = match(adminRoutes);
 
-    const isPublic = match(publicRoutes);
-    const isCustomer = match(customerRoutes);
-    console.log("user", user)
 
-    if (!user && !isPublic) {
-      console.log(user)
-
-      router.push('/login');
+    if (isPublicPath) {
       return;
     }
-    if (!user && !isPublic && !isCustomer) {
-      console.log(user)
-      router.push('/');
+  
+    // Se não está logado e a rota não é pública, manda pra login
+    if (!user) {
+      router.push("/login");
       return;
     }
-  }, [pathname, router]);
+  
+    if (isCustomerPath && !user) {
+      router.push("/");
+      return;
+    }
 
+  if (isAdminPath && !isAdmin) {
+      router.push("/");
+      return;
+    }
+ 
+  
+    if (!isCustomerPath && !isAdminPath) {
+      router.push("/");
+    }
+  }, [pathname, authResolved, user, router]);
 
   const login = async (username: string, password: string) => {
     try {
@@ -101,7 +119,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 
   const fetchCustomerData = async (): Promise<void> => {
-    setAuthResolved(true)
 
     const sa = localStorage.getItem('accessToken')
     const sr = localStorage.getItem('refreshToken')
@@ -119,7 +136,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
        return
       }
       const data: UserDTO = await res.json();
+      
       setUser(data);
+      setIsAdmin(data.groups.some((gp => gp.name === "Admin")))
+      console.log(isAdmin)
       const sa = localStorage.getItem('accessToken')
       const sr = localStorage.getItem('refreshToken')
       if (sa) setAccessToken(sa)
@@ -142,7 +162,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ accessToken, refreshToken, user, login, logout, fetchCustomerData }}>
+    <AuthContext.Provider value={{ accessToken, refreshToken, user, isAdmin, login, logout, fetchCustomerData }}>
       {children}
     </AuthContext.Provider>
   )
